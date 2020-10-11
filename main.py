@@ -6,15 +6,13 @@ app = Flask(__name__,template_folder='template')
 
 @app.route("/",methods=["POST","GET"])
 def home():
-    #return "Please add username/password/repository to path"
     if request.method == "POST":
         submit_info=request.form
-
-        return redirect('/'+os.path.join(submit_info['user']
-                                ,submit_info['password']
-                                ,submit_info['repository']))
-    else:
-        return render_template("home_page.html")
+        if not '' in submit_info.values():
+            return redirect('/'+os.path.join(submit_info['user'].strip()
+                                    ,submit_info['password'].strip()
+                                    ,submit_info['repository'].strip()))
+    return render_template("home_page.html")
 
 @app.route("/<user>/<password>/<repo_name>")
 def login(user,password,repo_name):

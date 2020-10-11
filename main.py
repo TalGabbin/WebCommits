@@ -7,11 +7,14 @@ app = Flask(__name__,template_folder='template')
 @app.route("/",methods=["POST","GET"])
 def home():
     if request.method == "POST":
+        #getting user info from entry
         submit_info=request.form
+
         if not '' in submit_info.values():
             return redirect('/'+os.path.join(submit_info['user'].strip()
                                     ,submit_info['password'].strip()
                                     ,submit_info['repository'].strip()))
+    # rendering home page
     return render_template("home_page.html")
 
 @app.route("/<user>/<password>/<repo_name>")
@@ -26,7 +29,6 @@ def login(user,password,repo_name):
         
     # getting repo
     try:
-
         repo = git.get_repo(f"{user}/{repo_name}")
     except:
         return "Repository was not found"

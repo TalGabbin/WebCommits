@@ -6,17 +6,24 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "add username/password/repository to path"
+    return "Please add username/password/repository to path"
 
 @app.route("/<user>/<password>/<repo_name>")
 def login(user,password,repo_name):
     # using username and password
-    
-    git = Github(user, password)
-
+    try:
+        git = Github(user, password)
+        #if  account not valid will send error
+        [(s.name, s.name) for s in git.get_user().get_repos()]
+    except:
+        return 'There was a problem with your username or password'
+        
     # getting repo
-    repo = git.get_repo(f"{user}/{repo_name}")
-
+    try:
+        repo = git.get_repo(f"{user}/{repo_name}")
+    except:
+        return "Repository was not found"
+    
     # taking each commit from the last top_x and getting their data
     top_x = 5
     data = {}
@@ -30,7 +37,7 @@ def login(user,password,repo_name):
                                              }
     # check if data is empty
     if len(data)==0:
-        return 'there are no commits in this repository'
+        return 'There are no commits in this repository'
     return json.dumps(data)
 
 if __name__ == "__main__":

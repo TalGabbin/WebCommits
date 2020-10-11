@@ -1,12 +1,20 @@
-from flask import Flask
+from flask import Flask,request,render_template,redirect,jsonify
 from github import Github
-import json
+import os
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder='template')
 
-@app.route("/")
+@app.route("/",methods=["POST","GET"])
 def home():
-    return "Please add username/password/repository to path"
+    #return "Please add username/password/repository to path"
+    if request.method == "POST":
+        submit_info=request.form
+
+        return redirect('/'+os.path.join(submit_info['user']
+                                ,submit_info['password']
+                                ,submit_info['repository']))
+    else:
+        return render_template("home_page.html")
 
 @app.route("/<user>/<password>/<repo_name>")
 def login(user,password,repo_name):
@@ -20,6 +28,7 @@ def login(user,password,repo_name):
         
     # getting repo
     try:
+
         repo = git.get_repo(f"{user}/{repo_name}")
     except:
         return "Repository was not found"
@@ -38,7 +47,7 @@ def login(user,password,repo_name):
     # check if data is empty
     if len(data)==0:
         return 'There are no commits in this repository'
-    return json.dumps(data)
+    return jsonify(data)
 
 if __name__ == "__main__":
     app.run()

@@ -4,7 +4,7 @@
 - Python 3.7.X
 - Flask
 - PyGithub 
--JWT
+- JWT
 
 ### Then run the "app.py" file
 

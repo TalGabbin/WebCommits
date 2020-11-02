@@ -4,6 +4,7 @@
 - Python 3.7.X
 - Flask
 - PyGithub 
+-JWT
 
-### Then run the "main.py" file
+### Then run the "app.py" file
 
